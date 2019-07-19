@@ -2,13 +2,13 @@ import pygame
 import random
 
 WIDTH = 661
-HEIGHT = 661
+HEIGHT = 680
 FPS = 20
 
 #set-up the game
 pygame.init()
 screen = pygame.display.set_mode([WIDTH, HEIGHT])
-pygame.display.set_caption("my Game")
+pygame.display.set_caption("Snake")
 clock = pygame.time.Clock()
 
 # Colors (R, G, B)
@@ -19,18 +19,46 @@ GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 
 def drawGrid():
-    for i in range(0,61): #61 lines, starts at zero and stops when it hits 61
-        pygame.draw.line(screen, WHITE, [(11*i),0], [(11*i), 660], 1)
-        pygame.draw.line(screen, WHITE, [0,(11*i)], [660,(11*i)], 1)
     #how many rows and columns do we want?
     #Well, how long do you want it to take for the snake to get from one side to the other?
     #probably around 3 seconds? If our snake travels 10 pixels every frame and our game is running at 20 frames per second,
     #then how many pixels across should our screen be? Well, if we want it to take three seconds, then 20 frames will elapse 3 times.
     # so, 3*20=60frames. That means we will need 60 columns and 60 rows. If each box of the snake is 10  by 10 pixels
     # that means we will need 10*60=600 pixels. + 61 pixels for each line = 661 pixels
+    for i in range(0,61): #61 lines, starts at zero and stops when it hits 61
+        pygame.draw.line(screen, WHITE, [(11*i),0], [(11*i), 660], 1)
+        pygame.draw.line(screen, WHITE, [0,(11*i)], [660,(11*i)], 1)
+        
+font_name = pygame.font.match_font('arial')
+def draw_text(surf, text, size, x, y):
+      font = pygame.font.Font(font_name, size)
+      text_surface = font.render(text, True, WHITE)
+      text_rect = text_surface.get_rect()
+      text_rect.midtop = (x, y)
+      surf.blit(text_surface, text_rect)
+    
+class Food(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self) #this function is defined in the parent class which is inherited...
+        
+        #The block image will always be red
+        self.image = pygame.Surface([10, 10])
+        self.image.fill(RED)
 
+       # Update the position of this object by setting the values of rect.x and rect.y
+        self.rect = self.image.get_rect()
 
+        #place it at a random location
+        self.rect.x = random.randint(0,59) * 11 + 1;
+        self.rect.y = random.randint(0,59) * 11 + 1;
+    #use the default update method
 
+    def move(self):
+        #move the food to another location
+        self.rect.x = random.randint(0,59) * 11 + 1;
+        self.rect.y = random.randint(0,59) * 11 + 1;
+        
+        
 class Snake(pygame.sprite.Sprite):
 
     # Constructor. Pass in the color of the block,
@@ -80,11 +108,16 @@ class Snake(pygame.sprite.Sprite):
         
 #create my own snake
 mySnake = Snake(GREEN, 10, 10)
+#create a peice of food
+food = Food() #will automatically be put in a random location
+#create a score-keeping device
+score = 0
+
 
 #Create a group to store my sprites
 all_sprites = pygame.sprite.Group()
-#add mySnake to the group of sprites
-all_sprites.add(mySnake)
+#add mySnake and the food to the group of sprites
+all_sprites.add(mySnake, food)
 
 
 running = True
@@ -102,13 +135,21 @@ while running:
     # Update Sprites
     all_sprites.update()
     
-    # Render (draw)
+    #check for collision with food
+    if mySnake.rect.colliderect(food.rect):
+        score += 1
+        food.move()
 
+    
+    # Render (draw)
     #Clear the previous Sprites drawn
     screen.fill(BLACK)
+    #re-draw the grid
+    drawGrid()
     #draw the new Sprites
     all_sprites.draw(screen)
-    drawGrid()
+    #draw the score remember, draw_text(surf, text, size, x, y)
+    draw_text(screen, "Score: " + str(score), 18, 35, 662)
 
     
     #flip the 'white board' so that the computer starts to read what we wrote
