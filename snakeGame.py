@@ -59,11 +59,11 @@ class Food(pygame.sprite.Sprite):
         self.rect.y = random.randint(0,59) * 11 + 1;
         
         
-class Snake(pygame.sprite.Sprite):
+class SnakeBlock(pygame.sprite.Sprite):
 
     # Constructor. Pass in the color of the block,
     # and its x and y position
-    def __init__(self, color, width, height):
+    def __init__(self, color, width, height, head, prevSnakeBlock):
        # Call the parent class (Sprite) constructor
        pygame.sprite.Sprite.__init__(self) #this function is defined in the parent class which is inherited...
 
@@ -72,58 +72,81 @@ class Snake(pygame.sprite.Sprite):
        self.image = pygame.Surface([width, height])
        self.image.fill(color)
 
-        #initialize the speed of the snake
-       self.speedx = 0
-       self.speedy = 0
+       #keep track of whether or not the block is the head of the snake
+       self.head = head 
+
+       #initialize the speed of the snake
+       #if we're creating the snake's head, that means the game is just starting, so set the speed to 0
+       if(head):
+           self.speedx = 0
+           self.speedy = 0
+       else:#if it's the snake's body, it gets the speed of the block ahead of it
+           self.speedx = prevSnakeBlock.speedx
+           self.speedy = prevSnakeBlock.speedy
         
        # Fetch the rectangle object that has the dimensions of the image
        # Update the position of this object by setting the values of rect.x and rect.y
        self.rect = self.image.get_rect()
 
-       self.rect.x = 1
-       self.rect.y = 1
-
+        #set the snake's position
+       #if it's the head, we'll start in the top left corner
+       if(head):
+           self.rect.x = 1
+           self.rect.y = 1
+       else: #else we have to start behind the previous snake block
+           self.rect.x = prevSnakeBlock.rect.x - prevSnakeBlock.speedx
+           self.rect.y = prevSnakeBlock.rect.y - prevSnakeBlock.speedy
+        
     
-    def update(self):
+    def update(self, prevSnakeBlock):
         
         keystate = pygame.key.get_pressed()
-        
-        if keystate[pygame.K_RIGHT]:
-            self.speedx = 11
-            self.speedy = 0
-        if keystate[pygame.K_LEFT]:
-            self.speedx = -11
-            self.speedy = 0
-        if keystate[pygame.K_UP]:
-            self.speedx = 0
-            self.speedy = -11
-        if keystate[pygame.K_DOWN]:
-            self.speedx = 0
-            self.speedy = 11
 
+        #if the snake block is the snake's head, then it's controlled by the player's
+        #key touches
+        if(self.head):
+            if keystate[pygame.K_RIGHT]:
+                self.speedx = 11
+                self.speedy = 0
+            if keystate[pygame.K_LEFT]:
+                self.speedx = -11
+                self.speedy = 0
+            if keystate[pygame.K_UP]:
+                self.speedx = 0
+                self.speedy = -11
+            if keystate[pygame.K_DOWN]:
+                self.speedx = 0
+                self.speedy = 11
+        else: #if it's the body, then it's determined by the direction of the previous snake
+            self.speedx = prevSnakeBlock.speedx
+            self.speedy = prevSnakeBlock.speedy
+            
+        #regardless of whether the snakeblock is the head or not,
+        #we want to move it by the amount specified by its speed
         self.rect.x += self.speedx
         self.rect.y += self.speedy
         
         
         
-#create my own snake
-mySnake = Snake(GREEN, 10, 10)
+#create the snake head
+snakeHead = SnakeBlock(GREEN, 10, 10, True, None)
 #create a peice of food
 food = Food() #will automatically be put in a random location
 #create a score-keeping device
 score = 0
-
+#create an array that will store all of the snake blocks
+mySnake = [snakeHead]
 
 #Create a group to store my sprites
 all_sprites = pygame.sprite.Group()
 #add mySnake and the food to the group of sprites
-all_sprites.add(mySnake, food)
+all_sprites.add(snakeHead, food)
 
 
 running = True
 while running:
     # Process input (events)
-
+######################################################################################
     #remember, pygame.event.get() returns to us a list of events that have piled up while the program was running.
     #That means we have to go through the line and pick out each event to check if they're a quit event.
     #If they are, we have to close the window. If none of the events are a quit event, then keep going in the program.
@@ -131,17 +154,40 @@ while running:
     # check for closing window
         if event.type == pygame.QUIT:
             running = False
-    
-    # Update Sprites
-    all_sprites.update()
-    
-    #check for collision with food
-    if mySnake.rect.colliderect(food.rect):
+######################################################################################
+
+
+    #update the Snake position based on previous speed
+#################################################################################################
+    #***update from the last snakeBlock to the first
+
+    #update the body
+    #note that if an array is of size 6, then the last element is actually indexed as array[5] because there's an array[0]
+    for i in range((len(mySnake)-1), 0, -1):
+        mySnake[i].update(mySnake[i-1]) #we give the update function for the body of the snale the snake block that comes before it
+        
+    #update the head
+    mySnake[0].update(None) #we give it none because the head doesen't have a previous block
+####################################################################################################
+
+
+    #check for collision of the head with food to manage scoring system and snake length
+##############################################
+    if mySnake[0].rect.colliderect(food.rect):
+        #manage scoring system
         score += 1
         food.move()
+        
+        #manage snake length
+        newBlock = SnakeBlock(GREEN, 10, 10, False, mySnake[len(mySnake)-1])#give it as the previous snake block the last block in the array
+        all_sprites.add(newBlock)#make sure you add it to the sprites that we draw to the screen
+        mySnake.append(newBlock)#add the new snakeBlock to the mySnake array
+################################################
+    
 
     
     # Render (draw)
+#################################################
     #Clear the previous Sprites drawn
     screen.fill(BLACK)
     #re-draw the grid
@@ -150,16 +196,16 @@ while running:
     all_sprites.draw(screen)
     #draw the score remember, draw_text(surf, text, size, x, y)
     draw_text(screen, "Score: " + str(score), 18, 35, 662)
-
+#####################################################
     
     #flip the 'white board' so that the computer starts to read what we wrote
     #while we write on the side that the computer has already read(double-buffering).
     pygame.display.flip()
 
-
     # Wait until 1/30 seconds has elapsed to give our eyes a chance to see the change
     # before moving on (30FPS = 1Frame every 1/30seconds)
     clock.tick(FPS)
+
 
 #if We've broken out of the loop, that means that 'Running' is false, which meanse
 #we should close the program.
