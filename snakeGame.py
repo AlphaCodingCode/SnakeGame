@@ -1,9 +1,9 @@
 import pygame
 import random
 
-WIDTH = 360
-HEIGHT = 480
-FPS = 30
+WIDTH = 661
+HEIGHT = 661
+FPS = 20
 
 #set-up the game
 pygame.init()
@@ -18,6 +18,19 @@ RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 
+def drawGrid():
+    for i in range(0,61): #61 lines, starts at zero and stops when it hits 61
+        pygame.draw.line(screen, WHITE, [(11*i),0], [(11*i), 660], 1)
+        pygame.draw.line(screen, WHITE, [0,(11*i)], [660,(11*i)], 1)
+    #how many rows and columns do we want?
+    #Well, how long do you want it to take for the snake to get from one side to the other?
+    #probably around 3 seconds? If our snake travels 10 pixels every frame and our game is running at 20 frames per second,
+    #then how many pixels across should our screen be? Well, if we want it to take three seconds, then 20 frames will elapse 3 times.
+    # so, 3*20=60frames. That means we will need 60 columns and 60 rows. If each box of the snake is 10  by 10 pixels
+    # that means we will need 10*60=600 pixels. + 61 pixels for each line = 661 pixels
+
+
+
 class Snake(pygame.sprite.Sprite):
 
     # Constructor. Pass in the color of the block,
@@ -31,15 +44,16 @@ class Snake(pygame.sprite.Sprite):
        self.image = pygame.Surface([width, height])
        self.image.fill(color)
 
-       self.speedx = 8
+        #initialize the speed of the snake
+       self.speedx = 0
        self.speedy = 0
         
        # Fetch the rectangle object that has the dimensions of the image
        # Update the position of this object by setting the values of rect.x and rect.y
        self.rect = self.image.get_rect()
 
-       self.rect.x = WIDTH/2
-       self.rect.y = HEIGHT/2
+       self.rect.x = 1
+       self.rect.y = 1
 
     
     def update(self):
@@ -47,17 +61,17 @@ class Snake(pygame.sprite.Sprite):
         keystate = pygame.key.get_pressed()
         
         if keystate[pygame.K_RIGHT]:
-            self.speedx = 8
+            self.speedx = 11
             self.speedy = 0
         if keystate[pygame.K_LEFT]:
-            self.speedx = -8
+            self.speedx = -11
             self.speedy = 0
         if keystate[pygame.K_UP]:
             self.speedx = 0
-            self.speedy = -8
+            self.speedy = -11
         if keystate[pygame.K_DOWN]:
             self.speedx = 0
-            self.speedy = 8
+            self.speedy = 11
 
         self.rect.x += self.speedx
         self.rect.y += self.speedy
@@ -65,7 +79,7 @@ class Snake(pygame.sprite.Sprite):
         
         
 #create my own snake
-mySnake = Snake(GREEN, 50, 50)
+mySnake = Snake(GREEN, 10, 10)
 
 #Create a group to store my sprites
 all_sprites = pygame.sprite.Group()
@@ -94,6 +108,7 @@ while running:
     screen.fill(BLACK)
     #draw the new Sprites
     all_sprites.draw(screen)
+    drawGrid()
 
     
     #flip the 'white board' so that the computer starts to read what we wrote
