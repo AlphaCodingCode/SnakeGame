@@ -36,6 +36,27 @@ def draw_text(surf, text, size, x, y):
       text_rect = text_surface.get_rect()
       text_rect.midtop = (x, y)
       surf.blit(text_surface, text_rect)
+
+def checkInBounds(head):
+    if head.rect.top < 0:
+        return False
+    elif head.rect.bottom > 660:
+        return False
+    elif head.rect.right > 660:
+        return False
+    elif head.rect.left < 0:
+        return False
+    else:
+        return True
+
+def ateYourself(mySnake):
+    for i in range(1,len(mySnake)): #remember, does not include the last number in the range
+        if mySnake[0].rect.colliderect(mySnake[i].rect):
+            return True
+
+    return False
+        
+        
     
 class Food(pygame.sprite.Sprite):
     def __init__(self):
@@ -106,17 +127,21 @@ class SnakeBlock(pygame.sprite.Sprite):
         #key touches
         if(self.head):
             if keystate[pygame.K_RIGHT]:
-                self.speedx = 11
-                self.speedy = 0
+                if(self.speedx >= 0):
+                    self.speedx = 11
+                    self.speedy = 0
             if keystate[pygame.K_LEFT]:
-                self.speedx = -11
-                self.speedy = 0
+                if(self.speedx <= 0):
+                    self.speedx = -11
+                    self.speedy = 0
             if keystate[pygame.K_UP]:
-                self.speedx = 0
-                self.speedy = -11
+                if(self.speedy <= 0):
+                    self.speedx = 0
+                    self.speedy = -11
             if keystate[pygame.K_DOWN]:
-                self.speedx = 0
-                self.speedy = 11
+                if(self.speedy >= 0):
+                    self.speedx = 0
+                    self.speedy = 11
         else: #if it's the body, then it's determined by the direction of the previous snake
             self.speedx = prevSnakeBlock.speedx
             self.speedy = prevSnakeBlock.speedy
@@ -183,7 +208,11 @@ while running:
         all_sprites.add(newBlock)#make sure you add it to the sprites that we draw to the screen
         mySnake.append(newBlock)#add the new snakeBlock to the mySnake array
 ################################################
-    
+    #check for collision of the head with itself and the wall
+    if checkInBounds(mySnake[0]) == False:
+        running = False
+    if ateYourself(mySnake) == True:
+        running = False
 
     
     # Render (draw)
