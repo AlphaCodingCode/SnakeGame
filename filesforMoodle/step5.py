@@ -32,23 +32,37 @@ def drawGrid():
     
 class Food(pygame.sprite.Sprite):
     def __init__(self):
-        pygame.sprite.Sprite.__init__(self) #this function is defined in the parent class which is inherited...
-        
-        #The block image will always be red
-        self.image = pygame.Surface([10, 10])
-        self.image.fill(RED)
+        #call the parent class's '__init__' function to make this object into a sprite
+        #---------------------insert your code here--------------------
 
-       # Update the position of this object by setting the values of rect.x and rect.y
-        self.rect = self.image.get_rect()
+        #--------------------------------------------------------------
 
-        #place it at a random location
-        self.rect.x = random.randint(0,59) * 11 + 1;
-        self.rect.y = random.randint(0,59) * 11 + 1;
+        #Create a 'surface', using pygame.suface([width,height]) function and save it under an 'image' value in the class
+        #once you've done that, use pygame's 'surface.fill(aColor)' function to make the image you created a certain color.
+        #---------------------insert your code here--------------------
+
+        #--------------------------------------------------------------
+
+       # Create a value for your class called 'rect' that you make equal to your image's rectangle using the surface.get_rect() function.
+       #remember, your image is a surface. Having a property called 'rect' is important because pygame will search for it by default when it's
+       #trying to print your sprite to the screen.
+        #---------------------insert your code here--------------------
+
+        #--------------------------------------------------------------
+
+        #place in a random grid square. Remember, there are 60 rows and columns and each are spaced 11 pixels apart (to account for the line that seperates them)
+        #You can use the function ransom.randint(lowerbound, upperBound) to generate a random number
+        #Remember that you can use rect.x and rect.y to set your position
+        #---------------------insert your code here--------------------
+
+        #--------------------------------------------------------------
         
     def move(self):
-        #move the food to another location
-        self.rect.x = random.randint(0,59) * 11 + 1;
-        self.rect.y = random.randint(0,59) * 11 + 1;
+        #place the food in a random grid square
+        #-----------------insert your code here-----------------------------
+
+
+        #-----------------------------------------------------------------
         
 class Snake(pygame.sprite.Sprite):
 
@@ -104,12 +118,15 @@ class Snake(pygame.sprite.Sprite):
         
 #create my own snake
 mySnake = Snake(GREEN, 10, 10)
-food = Food() #will automatically be put in a random location
+#Create a food object
+#-----------------insert your code here-----------------------------
+
+#-----------------------------------------------------------------
 
 #Create a group to store my sprites
 all_sprites = pygame.sprite.Group()
 #add mySnake to the group of sprites
-all_sprites.add(mySnake, food)
+all_sprites.add(mySnake, '''add your food object here so that it gets drawn''')
 
 
 running = True

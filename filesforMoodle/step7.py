@@ -61,9 +61,11 @@ class Food(pygame.sprite.Sprite):
         
 class SnakeBlock(pygame.sprite.Sprite):
 
-    # Constructor. Pass in the color of the block,
-    # and its x and y position
-    def __init__(self, color, width, height, head, prevSnakeBlock):
+    # Constructor. Pass in the color of the block, it's dimensions,
+    #whether or not it's the snake's head and the snake block that is in front of it
+    #'head' is meant to be a boolean datatype, meaning it can only be True or False
+    #prevSnakeBlock is meant to be a SnakeBlock class object.
+    def __init__(self, color, width, height, head, prevSnakeBlock): 
        # Call the parent class (Sprite) constructor
        pygame.sprite.Sprite.__init__(self) #this function is defined in the parent class which is inherited...
 
@@ -77,12 +79,15 @@ class SnakeBlock(pygame.sprite.Sprite):
 
        #initialize the speed of the snake
        #if we're creating the snake's head, that means the game is just starting, so set the speed to 0
-       if(head):
-           self.speedx = 0
-           self.speedy = 0
-       else:#if it's the snake's body, it gets the speed of the block ahead of it
-           self.speedx = prevSnakeBlock.speedx
-           self.speedy = prevSnakeBlock.speedy
+       #if we're creating the snake's body, that means it's speed is determined by the snakeBlock that is in front of it
+       #-----------insert your code here ------------------------------
+
+
+
+
+       
+
+       #---------------------------------------------------------------
         
        # Fetch the rectangle object that has the dimensions of the image
        # Update the position of this object by setting the values of rect.x and rect.y
@@ -90,40 +95,32 @@ class SnakeBlock(pygame.sprite.Sprite):
 
         #set the snake's position
        #if it's the head, we'll start in the top left corner
-       if(head):
-           self.rect.x = 1
-           self.rect.y = 1
-       else: #else we have to start behind the previous snake block
-           self.rect.x = prevSnakeBlock.rect.x - prevSnakeBlock.speedx
-           self.rect.y = prevSnakeBlock.rect.y - prevSnakeBlock.speedy
-        
-    
+       #if it's the body, we'll start 1 grid-square behind the snakeBlock in front
+       #-----------insert your code here ------------------------------
+
+
+
+
+       
+
+       #---------------------------------------------------------------
     def update(self, prevSnakeBlock):
         
         keystate = pygame.key.get_pressed()
 
-        #if the snake block is the snake's head, then it's controlled by the player's
-        #key touches
-        if(self.head):
-            if keystate[pygame.K_RIGHT]:
-                if(self.speedx >= 0):
-                    self.speedx = 11
-                    self.speedy = 0
-            if keystate[pygame.K_LEFT]:
-                if(self.speedx <= 0):
-                    self.speedx = -11
-                    self.speedy = 0
-            if keystate[pygame.K_UP]:
-                if(self.speedy <= 0):
-                    self.speedx = 0
-                    self.speedy = -11
-            if keystate[pygame.K_DOWN]:
-                if(self.speedy >= 0):
-                    self.speedx = 0
-                    self.speedy = 11
-        else: #if it's the body, then it's determined by the direction of the previous snake
-            self.speedx = prevSnakeBlock.speedx
-            self.speedy = prevSnakeBlock.speedy
+        
+        #Update the speed of the snake.
+        #if the snakeBlock is the snake's head, then it's controlled by the player's
+        #key touches (same as last step). If it's the body then it's determined
+        #by the speed of the snakeBlock in front of it.
+        #-----------insert your code here ------------------------------
+
+
+
+
+       
+
+       #---------------------------------------------------------------
             
         #regardless of whether the snakeblock is the head or not,
         #we want to move it by the amount specified by its speed
@@ -138,7 +135,8 @@ snakeHead = SnakeBlock(GREEN, 10, 10, True, None)
 food = Food() #will automatically be put in a random location
 #create a score-keeping device
 score = 0
-#create an array that will store all of the snake blocks
+#create an array that will store all of the snake blocks.
+#initialize it with only the head
 mySnake = [snakeHead]
 
 #Create a group to store my sprites
@@ -149,6 +147,7 @@ all_sprites.add(snakeHead, food)
 
 running = True
 while running:
+    
     # Process input (events)
 ######################################################################################
     #remember, pygame.event.get() returns to us a list of events that have piled up while the program was running.
@@ -161,29 +160,37 @@ while running:
 ######################################################################################
 
 
-    #update the Snake position based on previous speed
+    #update the Snake position and speed
 #################################################################################################
-    #***update from the last snakeBlock to the first
 
-    #update the body
-    #note that if an array is of size 6, then the last element is actually indexed as array[5] because there's an array[0]
+    #update the position and speed of the snake body.
+    #Note that the snake body is indexed in the
+    #array from element snake[1] to element snake[len(snake)-1].
+    #note that if an array is of size 6, then the last element is actually indexed as array[5].
+    #notice that the i variable is decreasing by 1 every time, as shown by the last '-1' parameter
+    #notice that the for loop last executes when i=1, which is the block right before the head
+    
     for i in range((len(mySnake)-1), 0, -1):
-        mySnake[i].update(mySnake[i-1]) #we give the update function for the body of the snale the snake block that comes before it
+          #-----insert your code here ------------
+
+          #---------------------------------------
         
-    #update the head
+    #update the speed and position of the snake's head
     mySnake[0].update(None) #we give it none because the head doesen't have a previous block
 ####################################################################################################
 
 
     #check for collision of the head with food to manage scoring system and snake length
+    #remember that collisions only happen with the head of the snake.
 ##############################################
     if mySnake[0].rect.colliderect(food.rect):
         #manage scoring system
         score += 1
         food.move()
         
-        #manage snake length
-        newBlock = SnakeBlock(GREEN, 10, 10, False, mySnake[len(mySnake)-1])#give it as the previous snake block the last block in the array
+        #increase the snake length by adding a body block
+        #make sure you pass in the right parameters when you call the snake's constructor class
+        newBlock = '''insert your code here''' 
         all_sprites.add(newBlock)#make sure you add it to the sprites that we draw to the screen
         mySnake.append(newBlock)#add the new snakeBlock to the mySnake array
 ################################################

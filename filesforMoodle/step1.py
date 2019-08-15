@@ -18,44 +18,6 @@ RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 
-class Snake(pygame.sprite.Sprite):
-
-    # Constructor. Pass in the color of the block,
-    # and its x and y position
-    def __init__(self, color, width, height):
-       # Call the parent class (Sprite) constructor
-       pygame.sprite.Sprite.__init__(self) #this function is defined in the parent class, which is inherited.
-
-       # Create an image of the block, and fill it with a color.
-       # This could also be an image loaded from the disk.
-       self.image = pygame.Surface([width, height])
-       self.image.fill(color)
-        
-       # Fetch the rectangle object that has the dimensions of the image
-       # Update the position of this object by setting the values of rect.x and rect.y
-       self.rect = self.image.get_rect()
-
-       self.rect.x = WIDTH/2
-       self.rect.y = HEIGHT/2
-
-    
-    def update(self):
-        
-        keystate = pygame.key.get_pressed()
-        
-   
-        
-        
-        
-#create my own snake
-mySnake = Snake(GREEN, 50, 50)
-
-#Create a group to store my sprites
-all_sprites = pygame.sprite.Group()
-#add mySnake to the group of sprites
-all_sprites.add(mySnake)
-
-
 running = True
 while running:
     # Process input (events)
@@ -69,14 +31,12 @@ while running:
             running = False
     
     # Update Sprites
-    all_sprites.update()
-
     
     # Render (draw)
+
     #Clear the previous Sprites drawn
     screen.fill(BLACK)
     #draw the new Sprites
-    all_sprites.draw(screen)
 
     
     #flip the 'white board' so that the computer starts to read what we wrote

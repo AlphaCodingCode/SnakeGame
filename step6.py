@@ -89,17 +89,21 @@ class Snake(pygame.sprite.Sprite):
         keystate = pygame.key.get_pressed()
         
         if keystate[pygame.K_RIGHT]:
-            self.speedx = 11
-            self.speedy = 0
+            if(self.speedx >= 0):
+                self.speedx = 11
+                self.speedy = 0
         if keystate[pygame.K_LEFT]:
-            self.speedx = -11
-            self.speedy = 0
+            if(self.speedx <= 0):
+                self.speedx = -11
+                self.speedy = 0
         if keystate[pygame.K_UP]:
-            self.speedx = 0
-            self.speedy = -11
+            if(self.speedy <= 0):
+                self.speedx = 0
+                self.speedy = -11
         if keystate[pygame.K_DOWN]:
-            self.speedx = 0
-            self.speedy = 11
+            if(self.speedy >= 0):
+                self.speedx = 0
+                self.speedy = 11
 
         self.rect.x += self.speedx
         self.rect.y += self.speedy
@@ -148,7 +152,7 @@ while running:
     drawGrid()
     #draw the new Sprites
     all_sprites.draw(screen)
-    #draw the score remember, draw_text(surf, text, size, x, y)
+    #draw the score remember, draw_text(surface, text, size, x, y)
     draw_text(screen, "Score: " + str(score), 18, 35, 662)
 
     

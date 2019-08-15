@@ -36,6 +36,30 @@ def draw_text(surf, text, size, x, y):
       text_rect = text_surface.get_rect()
       text_rect.midtop = (x, y)
       surf.blit(text_surface, text_rect)
+
+def checkInBounds(head):
+#---------insert your code here---------------------------
+
+
+
+
+
+
+
+#----------------------------------------------------------
+
+def ateYourself(mySnake):
+#---------insert your code here---------------------------
+
+
+
+
+
+
+
+#----------------------------------------------------------
+        
+        
     
 class Food(pygame.sprite.Sprite):
     def __init__(self):
@@ -187,7 +211,11 @@ while running:
         all_sprites.add(newBlock)#make sure you add it to the sprites that we draw to the screen
         mySnake.append(newBlock)#add the new snakeBlock to the mySnake array
 ################################################
-    
+    #check for collision of the head with itself and the wall
+    if checkInBounds(mySnake[0]) == False:
+        running = False
+    if ateYourself(mySnake) == True:
+        running = False
 
     
     # Render (draw)

@@ -204,9 +204,10 @@ while running:
         food.move()
         
         #manage snake length
-        newBlock = SnakeBlock(GREEN, 10, 10, False, mySnake[len(mySnake)-1])#give it as the previous snake block the last block in the array
-        all_sprites.add(newBlock)#make sure you add it to the sprites that we draw to the screen
-        mySnake.append(newBlock)#add the new snakeBlock to the mySnake array
+        for i in range(0,5):
+            newBlock = SnakeBlock(GREEN, 10, 10, False, mySnake[len(mySnake)-1])#give it as the previous snake block the last block in the array
+            all_sprites.add(newBlock)#make sure you add it to the sprites that we draw to the screen
+            mySnake.append(newBlock)#add the new snakeBlock to the mySnake array
 ################################################
     #check for collision of the head with itself and the wall
     if checkInBounds(mySnake[0]) == False:

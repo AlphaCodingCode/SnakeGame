@@ -8,7 +8,7 @@ FPS = 30
 #set-up the game
 pygame.init()
 screen = pygame.display.set_mode([WIDTH, HEIGHT])
-pygame.display.set_caption("my Game")
+pygame.display.set_caption("Snake")
 clock = pygame.time.Clock()
 
 # Colors (R, G, B)
@@ -18,10 +18,12 @@ RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 
-class Snake(pygame.sprite.Sprite):
+
+class Snake(pygame.sprite.Sprite): #inherits the properties of a sprite.
+                                   #Allows us to draw the snake to the screen later on
 
     # Constructor. Pass in the color of the block,
-    # and its x and y position
+    # and its width and height to initialize them
     def __init__(self, color, width, height):
        # Call the parent class (Sprite) constructor
        pygame.sprite.Sprite.__init__(self) #this function is defined in the parent class, which is inherited.
@@ -42,18 +44,19 @@ class Snake(pygame.sprite.Sprite):
     def update(self):
         
         keystate = pygame.key.get_pressed()
+    
         
-   
-        
-        
-        
-#create my own snake
-mySnake = Snake(GREEN, 50, 50)
+#create an object of the snake class. Make sure it's a square.
+#remember, our snake class's constructor (the __init__ function)
+#requires that you pass in the color, width, and height of the snake when you create a snake object
+#------------------insert your code here-----------------------
+
+#-------------------------------------------------------------        
 
 #Create a group to store my sprites
 all_sprites = pygame.sprite.Group()
 #add mySnake to the group of sprites
-all_sprites.add(mySnake)
+all_sprites.add( ''' insert your snake here ''')
 
 
 running = True

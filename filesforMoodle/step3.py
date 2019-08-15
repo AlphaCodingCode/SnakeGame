@@ -24,12 +24,15 @@ class Snake(pygame.sprite.Sprite):
     # and its x and y position
     def __init__(self, color, width, height):
        # Call the parent class (Sprite) constructor
-       pygame.sprite.Sprite.__init__(self) #this function is defined in the parent class, which is inherited.
+       pygame.sprite.Sprite.__init__(self) #this function is defined in the parent class which is inherited...
 
        # Create an image of the block, and fill it with a color.
        # This could also be an image loaded from the disk.
        self.image = pygame.Surface([width, height])
        self.image.fill(color)
+
+       self.speedx = 8
+       self.speedy = 0
         
        # Fetch the rectangle object that has the dimensions of the image
        # Update the position of this object by setting the values of rect.x and rect.y
@@ -42,13 +45,41 @@ class Snake(pygame.sprite.Sprite):
     def update(self):
         
         keystate = pygame.key.get_pressed()
+
+        #----------------insert your code here---------------------------------------------------------------
+        #check the keystate and edit self.speedx and self.speedy accordingly. Remember the snake can only move left, right, or straight,
+        #but it can never go in one direction and then switch to the opposite direction... hint: use if else statements
+
+
+
+
+
+
+
+
+
+
+
+
         
-   
+
+
+        #then update your position by updating the self.rect.x and self.rect.y according to your speed
         
+
+
+        #-----------------------------------------------------------------------------------------------------
         
+
         
-#create my own snake
-mySnake = Snake(GREEN, 50, 50)
+#create an object of the snake class. Make sure it's a square.
+#remember, our snake class's constructor (the __init__ function)
+#requires that you pass in the color, width, and height of the snake when you create a snake object
+#------------------insert your code here-----------------------
+
+#-------------------------------------------------------------
+
+     
 
 #Create a group to store my sprites
 all_sprites = pygame.sprite.Group()

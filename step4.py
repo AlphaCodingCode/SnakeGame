@@ -20,9 +20,9 @@ BLUE = (0, 0, 255)
 
 def drawGrid():
     for i in range(0,61): #61 lines, starts at zero and stops when it hits 61
-        pygame.draw.line(screen, WHITE, [(11*i),0], [(11*i), 660], 1)
-        pygame.draw.line(screen, WHITE, [0,(11*i)], [660,(11*i)], 1)
-    #how many rows and columns do we want?
+        pygame.draw.line(screen, WHITE, [(11*i),0], [(11*i), 660], 1) #vertical lines
+        pygame.draw.line(screen, WHITE, [0,(11*i)], [660,(11*i)], 1) #horizontal lines
+    #Here is how we figured out how many rows and columns we wanted if you were curious:
     #Well, how long do you want it to take for the snake to get from one side to the other?
     #probably around 3 seconds? If our snake travels 10 pixels every frame and our game is running at 20 frames per second,
     #then how many pixels across should our screen be? Well, if we want it to take three seconds, then 20 frames will elapse 3 times.
@@ -61,17 +61,21 @@ class Snake(pygame.sprite.Sprite):
         keystate = pygame.key.get_pressed()
         
         if keystate[pygame.K_RIGHT]:
-            self.speedx = 11
-            self.speedy = 0
+            if(self.speedx >= 0):
+                self.speedx = 11
+                self.speedy = 0
         if keystate[pygame.K_LEFT]:
-            self.speedx = -11
-            self.speedy = 0
+            if(self.speedx <= 0):
+                self.speedx = -11
+                self.speedy = 0
         if keystate[pygame.K_UP]:
-            self.speedx = 0
-            self.speedy = -11
+            if(self.speedy <= 0):
+                self.speedx = 0
+                self.speedy = -11
         if keystate[pygame.K_DOWN]:
-            self.speedx = 0
-            self.speedy = 11
+            if(self.speedy >= 0):
+                self.speedx = 0
+                self.speedy = 11
 
         self.rect.x += self.speedx
         self.rect.y += self.speedy
